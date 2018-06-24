@@ -1,0 +1,23 @@
+.form_container {
+	width: 75%;
+	margin: 0 auto;
+}
+
+.form_container input {
+	font-family: Empire;
+	font-size: 1em;
+	font-weight: bold;
+	line-height: 25px;
+	height: 25px;
+	border-radius: 5px;
+	margin: 20px;
+}
+
+#user-file {
+	color: white;
+}
+
+.form_container button {
+	width: 25%;
+	margin: 0 auto;
+}

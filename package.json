@@ -1,0 +1,29 @@
+{
+  "name": "click_game",
+  "version": "1.0.0",
+  "description": "Destroy the invaders!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrentLeasure/Space_Defender.git"
+  },
+  "author": "Brent Leasure",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BrentLeasure/Space_Defender/issues"
+  },
+  "homepage": "https://github.com/BrentLeasure/Space_Defender#readme",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-uglifycss": "^1.0.9"
+  },
+  "devDependencies": {
+    "gulp-concat": "^2.6.1",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8"
+  }
+}

@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="main.css">
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-</head>
-<body>
-	<div class="xwing"></div>
-<audio id="tie-fighter-audio" src="" ></audio>
-<script type="text/javascript" src="main.js"></script>
-</body>
-</html>
+<div id="main-page">
+	<div class="user-info-box">
+		<form action="POST" method="/create/new_user">
+			<div class="login-box">
+				<input type="username" name="username">
+				<input type="password" name="password">
+			</div>
+			<div class="register-box">
+				<input type="username" name="username">
+				<input type="password" name="psswrd">
+				<input type="password" name="confirmpsswrd">			
+				<input type="file" name="image">
+
+			</div>
+			<input type="submit" class="button">
+		</form>
+	</div>
+</div>
