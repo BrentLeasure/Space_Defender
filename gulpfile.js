@@ -13,7 +13,10 @@ var paths = {
 gulp.task( 'jsmin', function() {
 	return gulp.src(paths.js)
 	    .pipe(sourcemaps.init())
-	    .pipe(uglify())
+	    .pipe(uglify().on('error', function(e){
+            console.log(e);
+            return;
+         }))
 	    .pipe(concat('alljs.min.js'))
 	    .pipe(sourcemaps.write())
 	    .pipe(gulp.dest('min_files/'));

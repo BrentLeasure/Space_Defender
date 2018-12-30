@@ -1,9 +1,14 @@
+body {
+	overflow: hidden;
+}
+
 .cannon-general {
 	position: absolute;
 	background: #9d999a;
 	transform: translateY(-50%);
 	height: 20px;
-    width: 85px;
+    width: 35px;
+    z-index: 20;
 }
 
 #cannon-topRight {
@@ -37,12 +42,45 @@
 	background-size: cover;
 }
 
-.laser {
-	width: 3px;
-	height: 15px;
+.laser-container {
+	width: 30px;
+	height: 20px;
+	background: transparent;
+	position: absolute;
+	z-index: 99;
+}
+
+.laser-container-left {
+	transform-origin: center left;
+}
+
+.laser-container-right {
+	transform-origin: center right;
+}
+
+.laser-general {
+	width: 10px;
+	height: 3px;
+	transform-origin: center;
 	position: absolute;
 	border-radius: 3px;
 	background: #baec9b;
 	border: 1px solid #73bb53;
-	z-index: 99;
+	z-index: 1;
+}
+
+.laser-top {
+	top: 0;
+}
+
+.laser-bottom {
+	bottom: 0;
+}
+
+.push-laser-right {
+	right: 0;
+}
+
+.push-laser-left {
+	left: 0;
 }
