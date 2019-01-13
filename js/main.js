@@ -30,47 +30,48 @@ var ClickGame = {
 			gameObject.cannonHeight = document.getElementById('cannon-' + gameObject.currentCannon).clientHeight;
 			gameObject.laserArray = [];
 			gameObject.laserCounter = 0;
+			gameObject.laserTimers = [];
+			gameObject.fighterCounter = 0;
+			gameObject.fighterTimers = [];
 			
 			gameObject.container.addEventListener('click', ClickGame.laserInit);
 			document.addEventListener('keyup', ClickGame.keypress);
 
-			window.addEventListener("resize", ClickGame.resizing, false);
-
+			// window.addEventListener("resize", ClickGame.resizing, false);
 			document.onmousemove = function( event ) {
 				var degree = ClickGame.getAngle(event, true);
 				userControlled.cannons[gameObject.currentCannon].cannon.style.webkitTransform = 'translateY(-50%) rotate( ' + degree + 'deg)';
 				userControlled.cannons[gameObject.currentCannon].cannon.style.transform = 'translateY(-50%) rotate( ' + degree + 'deg)';
 			}
+
+			ClickGame.FighterInit();
 	},
 
 	
 	laserInit: function( event ) { 
 		// Setting up lazer start point and angle
-		var laser 			= ClickGame.createLaser(event); 
+		var laserValues 	= {'slope' : 0, 'yIntercept' : 0, 'xIncrementor' : 0, 'laserNum' : -1, 'obj': null};
+		laserValues.obj		= ClickGame.createLaser(event); 
     	var tieFighterNoise = document.getElementById('tie-fighter-audio');
     	var side 			= userControlled.cannons[gameObject.currentCannon].side;
 
     	// Getting slope and y-interept for y=mx+b formula
-    	var laserValues 	= {'slope' : 0, 'yIntercept' : 0, 'xIncrementor' : 0, 'speed' : 1, 'laserNum' : -1};
-    	var y = parseInt(laser.style.bottom.replace('px',''));
+    	var y = parseInt(laserValues.obj.style.bottom.replace('px',''));
     	var x = userControlled.cannons[gameObject.currentCannon].centerPoint[0];
     	var mouseX 		= event.clientX;
 		var mouseY 		= Math.abs(event.clientY - gameObject.screenHeight);	
     	
     	laserValues.slope 	= ClickGame.getSlope(mouseX, mouseY); 
-    	laserValues.xIncrementor = side != 'right' ? 1 : -1;
+    	laserValues.xIncrementor = side != 'right' ? 10 : - 10;
     	laserValues.yIntercept = y - (laserValues.slope * x); 
 
     	laserValues.laserNum = gameObject.laserCounter;
-    	console.log(typeof laserValues.speed);
-    	ClickGame.updateLaser(laserValues, laser, x, y);
+
+    	ClickGame.updateLaser(laserValues, x, y);
 
     	gameObject.laserCounter += 1; 
     	tieFighterNoise.setAttribute('src', 'http://www.sa-matra.net/sounds/starwars/TIE-Fire.wav');
     	tieFighterNoise.play();
-    
-		gameObject.laserArray.push( laser );
-	
 	},
 
 	//Creates a laser based on where the cannon is currently pointing.
@@ -111,24 +112,106 @@ var ClickGame = {
 		return laser;
 	},
 
-	updateLaser: function( laserValues, laser, x, y ) {
-		window.setTimeout( function(){ 
+	updateLaser: function( laserValues, x, y ) {
+		gameObject.laserTimers[laserValues.laserNum] = setTimeout( function(){ 
 			var newX = x + laserValues.xIncrementor;
 			var newY = (laserValues.slope * x) + laserValues.yIntercept;
 
-			laser.style.bottom 	= newY + 'px';
-			laser.style.left 	= newX + 'px';
+			laserValues.obj.style.bottom 	= newY + 'px';
+			laserValues.obj.style.left 	= newX + 'px'; 
 
-			laserValues['speed'] = laserValues['speed'] - .3;
-			console.log
-			if(newX >= 0 && newX <= gameObject.screenWidth ) {
-				ClickGame.updateLaser( laserValues, laser, newX, newY );
+			var hitBox = ClickGame.hasHit(laserValues.obj);
+			if( (newX >= 0 && newX <= gameObject.screenWidth) && (newY >= 0 && newY <= gameObject.screenHeight) && !hitBox ) {
+				ClickGame.updateLaser( laserValues, newX, newY );
 			} else {
-				var elem = document.getElementsByClassName('laserNum-' + laserValues.laserNum)[0];
-				elem.remove(); 
+				laserValues.obj.remove();
+				ClickGame.cleanTimeout(gameObject.laserTimers[laserValues.laserNum])
 			}
-		}, laserValues['speed']);
+		}, 5); 
 
+	},
+
+	FighterInit: function() {
+		var fighters = [];
+		var numFighters = 2;
+
+		for (var i = 0; i < numFighters; i++) {
+			var fighter = ClickGame.createFighters(numFighters, i);
+			fighters.push(fighter);
+			gameObject.fighterCounter++;
+		}
+
+		[].forEach.call(fighters, function(fighter) {
+			ClickGame.updateFighter(fighter);
+		});
+
+		setTimeout(function() {	
+			ClickGame.FighterInit();
+		}, 5000);
+	},
+
+	createFighters: function(numFighters, number) {
+			var fighter = {'y': 0, 'yIncrementor': 10, 'x': 0, 'xIncrementor': 10, 'fighterNum': gameObject.fighterCounter, 'obj': null};
+			fighter.obj = document.createElement('div');
+			fighter.obj.className = 'fighters fighter-' + gameObject.fighterCounter;
+			if(numFighters == 2 ) {
+				switch(number) {
+				  case 0:
+				    fighter.x = (gameObject.screenWidth/2 - 15) - 30;
+				    fighter.y = -10;
+				    break;
+				  case 1:
+				    fighter.x = (gameObject.screenWidth/2 - 15) + 30;
+				    fighter.y = -10;
+				    break;
+				} 
+			} else {
+				switch(number) {
+				  case 0:
+				    fighter.x = (gameObject.screenWidth/2 - 15) - 55;
+				    fighter.y = -20;
+				    break;
+				  case 1:
+				    fighter.x = (gameObject.screenWidth/2 - 15);
+				    fighter.y = -10;
+				    break;
+				  case 2:
+				  	fighter.x = (gameObject.screenWidth/2 - 15) + 55;
+				  	fighter.y = -20;
+				  	break;
+				} 
+			}
+			fighter.obj.style.left = fighter.x + 'px';
+			fighter.obj.style.top = fighter.y + 'px';
+			gameObject.container.appendChild(fighter.obj);
+		return fighter;
+	},
+
+	updateFighter: function(fighter) {
+		gameObject.fighterTimers[fighter.fighterNum] = setTimeout( function(){
+			fighter.y += fighter.yIncrementor;
+			fighter.obj.style.top = fighter.y + 'px';
+
+			console.log('fighter number: ' + fighter.fighterNum);
+			console.log('y: ' + fighter.y); 
+
+			if (fighter.y <= gameObject.screenHeight) {
+				ClickGame.updateFighter(fighter);
+			} else {
+				ClickGame.cleanTimeout(gameObject.fighterTimers[fighter.figherNum]);
+				fighter.obj.remove();
+			}
+
+			// if(fighter.obj.style.left <= 10) {
+			// 	fighter.x += fighter.xIncrementor;
+			// 	fighter.obj.style.left = fighter.x + 'px';
+			// }
+
+			// if(fighter.obj.style.left >= (gameObject.screenWidth - 10)) {
+			// 	fighter.x = fighter.x - fighter.xIncrementor;
+			// 	fighter.obj.style.left = fighter.x + 'px';	
+			// }
+		}, 60);
 	},
 
 	getAngle: function( event ) {
@@ -162,6 +245,26 @@ var ClickGame = {
 		}
 
 		return degree;	
+	},
+
+	cleanTimeout: function (timer) {
+		clearTimeout(timer);
+	},
+
+	hasHit: function(laser) {
+		var fighters = document.getElementsByClassName('fighters');
+		var hit = false;
+		[].forEach.call(fighters, function(fighter) {
+			var position 		= fighter.getBoundingClientRect();
+			var theLaser		= laser.getBoundingClientRect();
+			
+			if ( ((theLaser.top > position.top && theLaser.top < position.bottom) || (theLaser.bottom > position.top && theLaser.bottom < position.bottom)) 
+				&& ((theLaser.right < position.right && theLaser.right > position.left) || (theLaser.left < position.right && theLaser.left > position.left)) ) {
+				fighter.remove();
+				hit = true;
+			}
+		});
+		return hit;
 	},
 
 	keypress: function(event) {

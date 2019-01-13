@@ -8,7 +8,7 @@ body {
 	transform: translateY(-50%);
 	height: 20px;
     width: 35px;
-    z-index: 20;
+    display: block;
 }
 
 #cannon-topRight {
@@ -43,7 +43,7 @@ body {
 }
 
 .laser-container {
-	width: 30px;
+	width: 11px;
 	height: 20px;
 	background: transparent;
 	position: absolute;
@@ -83,4 +83,11 @@ body {
 
 .push-laser-left {
 	left: 0;
+}
+
+.fighters {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	background: white;
 }
