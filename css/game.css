@@ -2,6 +2,16 @@ body {
 	overflow: hidden;
 }
 
+#game-container {
+	width: 1100px;
+	height: 700px;
+	position: absolute;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 50%;
+	background: black;
+}
+
 .cannon-general {
 	position: absolute;
 	background: #9d999a;
@@ -31,15 +41,6 @@ body {
 #cannon-bottomLeft {
 	transform-origin: center left;
 	top: 75%;
-}
-
-.xwing {
-	position: relative;
-	width: 25px;
-	height: 25px;
-	top: 10px;
-	background: url('./photos/xwing.png');
-	background-size: cover;
 }
 
 .laser-container {
@@ -85,9 +86,28 @@ body {
 	left: 0;
 }
 
-.fighters {
+.fighter-containers {
 	position: absolute;
 	width: 30px;
-	height: 30px;
-	background: white;
+	height: 40px;
+	background: transparent;
+} 
+
+.fighter-hit-points {
+	position: absolute;
+	height: 3px;
+	transform: translate(-50%);
+	left: 50%;
+	background: red;
+}
+
+.fighters {
+	position: absolute;
+    width: 30px;
+    height: 30px;
+    transform: translate(-50%, -100%);
+    background: url('../photos/xwing.png');
+    background-size: contain;
+    left: 50%;
+    top: 100%;
 }
